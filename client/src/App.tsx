@@ -1,11 +1,14 @@
+import { CastingMat } from './components/casting-mat';
 import { StoneList } from './components/stone-list';
+import {  basicStoneAssetMap } from './utils/stone-asset-map';
 
 function App() {
 
   return (
-    <>
+    <div className='flexSpread fullWidth'>
       <StoneList />
-    </>
+      <CastingMat activeStones={Object.keys(basicStoneAssetMap)} />
+    </div>
   )
 }
 

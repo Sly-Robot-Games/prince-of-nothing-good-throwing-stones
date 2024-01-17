@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const UnforgivingSelector = () => {
+export const Unforgiving = () => {
   const [size, setSize] = useState<number>(1);
 
   const increaseSize = () => {

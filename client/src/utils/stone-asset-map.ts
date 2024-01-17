@@ -20,6 +20,23 @@ type StoneAsset = {
   assetPath: string,
   selectable: boolean,
 };
+export const STONE_ASSET_NAMES = [
+  'yourself',
+  'others',
+  'situation',
+  'solution',
+  'discovery',
+  'complication',
+  'threat',
+  'before',
+  'boon',
+  'secondDiscovery',
+  'asher',
+  'jazz',
+  'cal',
+  'talin'
+];
+
 
 export const basicStoneAssetMap: StoneAssetDictionary = {
   yourself: {
