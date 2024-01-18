@@ -14,6 +14,9 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  margin: 0 auto;
+  max-width: 1500px;
 }
 
 .title {
@@ -32,8 +35,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 20px;
-  width: 300px;
 }
 
 .flexRow {
@@ -43,10 +44,11 @@
 }
 
 .flexSpread {
+  width: 100%;
   display: flex;
   flex-direction: row;
-  width: 100%;
   justify-content: space-between;
+  align-items: center;
 }
 
 .icon {
@@ -59,15 +61,36 @@
   padding-bottom: 10px;
 }
 
+.marginRight {
+  margin-right: 10px;
+}
+
+.marginTop {
+  margin-top: 10px;
+}
+
 .paddingVertical {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+.paddingHorizontal {
+  padding-right: 10px;
+  padding-left: 10px;
 }
 
 .fullWidth {
   width: 100%;
 }
 
+.narrow {
+  width: 300px;
+}
+
+.rounded {
+  border-radius: 6px;
+  overflow: hidden;
+}
 
 @media (prefers-color-scheme: light) {
   :root {
