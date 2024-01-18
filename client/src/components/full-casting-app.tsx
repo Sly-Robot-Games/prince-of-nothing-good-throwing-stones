@@ -14,7 +14,7 @@ export const FullCastingApp = () => {
 
   return (
     <div className='flexSpread fullWidth'>
-      <StoneList setNewThrow={toggleThrow} clearThrow={toggleClear} />
+      <StoneList setNewThrow={toggleThrow} clearThrow={toggleClear} clearStones={clearCanvas} />
       <CastingMat 
         activeStones={Object.keys(basicStoneAssetMap)}
         throwStones={drawThrow}

@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fullStoneAssetMap } from "../../utils/stone-asset-map";
 import Checkbox from "@mui/material/Checkbox";
 
-export const StoneSelector = ({ stoneName }: { stoneName: string }) => {
+export const StoneSelector = ({ stoneName, clearStone }: { stoneName: string, clearStone?: boolean }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
-  const toggleSelected = () => setIsSelected(!isSelected);
+  const toggleSelected = useCallback(() => setIsSelected(prevSelected => !prevSelected), []);
 
   const stoneDetails = fullStoneAssetMap[stoneName];
+
+  useEffect(() => {
+    if (clearStone && isSelected) {
+      toggleSelected()
+    }
+  }, [clearStone, isSelected, toggleSelected])
 
   if (!stoneDetails) {
     return null;
