@@ -1,10 +1,21 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { STONE_ASSET_NAMES, fullStoneAssetMap } from "../utils/stone-asset-map";
 import LeafMat from '../assets/casting-mat.png';
+import LeafMatBorder from '../assets/casting-mat-cutout.png';
+import { Button } from "@mui/material";
 
 const ICON_SIZE = 50;
 const CANVAS_HEIGHT = 700;
 const CANVAS_WIDTH = 1000;
+const START_ANGLE = 0;
+const END_ANGLE = Math.PI * 2;
+const UNFORGIVING = {
+  X: 695,
+  Y: 335,
+  FILL: 'rgba(180, 39, 9, 0.3)',
+  STROKE: 'rgba(180, 39, 9, 0.5)',
+  INTENSIFIER: 40,
+};
 
 type InputProps = {
   activeStones: Array<string>;
@@ -15,9 +26,13 @@ type InputProps = {
 }
 
 export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThrow, completeClear }: InputProps) => {
+  const [unforgivingRadius, setUnforgivingRadius] = useState<number>(50);
+
   const matRef = useRef<HTMLCanvasElement | null>(null);
   const leafMat = useMemo(() => new Image(), []);
   leafMat.src = LeafMat;
+  const leafMatBorder = useMemo(() => new Image(), []);
+  leafMatBorder.src = LeafMatBorder;
   
   const getContext = () => {
     const canvas = matRef.current;
@@ -27,14 +42,14 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
     }
 
     return null;
-  }
+  };
 
   const getThrow = () => {
     const x = Math.floor(Math.random() * 900) + ICON_SIZE;
     const y = Math.floor(Math.random() * 600) + ICON_SIZE;
 
     return [x,y]
-  }
+  };
 
   const drawMat = useCallback(() => {
     const context = getContext();
@@ -42,6 +57,22 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
       context.drawImage(leafMat, 0, 0, context.canvas.width, context.canvas.height);
     }
   }, [leafMat]);
+
+  const drawUnforgiving = useCallback(() => {
+    console.log('?')
+    const context = getContext();
+    if (!context) {
+      return;
+    }
+    context.beginPath();
+    context.arc(UNFORGIVING.X, UNFORGIVING.Y, unforgivingRadius, START_ANGLE, END_ANGLE);
+    context.fillStyle = UNFORGIVING.FILL;
+    context.fill();
+    context.lineWidth = 5;
+    context.strokeStyle = UNFORGIVING.STROKE;
+    context.stroke();
+    context.drawImage(leafMatBorder, 0, 0, context.canvas.width, context.canvas.height);
+  }, [leafMatBorder, unforgivingRadius]);
 
   const clearMat = useCallback(() => {
     const context = getContext();
@@ -51,11 +82,13 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
 
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     drawMat();
+    drawUnforgiving();
+    
     if (clearCanvas) { 
       completeClear();
     }
-  }, [drawMat, clearCanvas, completeClear])
-
+  }, [drawMat, drawUnforgiving, clearCanvas, completeClear]);
+  
   const drawStones = useCallback(() => {
     const context = getContext();
     if (!context) {
@@ -73,11 +106,12 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
       }
     });
     completeThrow();
-  }, [activeStones, clearMat, completeThrow])
+  }, [activeStones, clearMat, completeThrow]);
 
   useEffect(() => {
-    drawMat()
-  }, [drawMat]);
+    drawMat();
+    drawUnforgiving();
+  }, [drawMat, drawUnforgiving]);
 
   useEffect(() => {
     if (throwStones) {
@@ -91,11 +125,14 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
     }
   }, [clearCanvas, clearMat]);
 
+  const intensifyUnforgiving = () => setUnforgivingRadius(unforgivingRadius + UNFORGIVING.INTENSIFIER);
+
   return (
       <div className="flexColumn">
-        <div className="rounded" style={{ height: `${CANVAS_HEIGHT}px`, width: `${CANVAS_WIDTH}px` }}>
+        <div className="rounded marginVertical" style={{ height: `${CANVAS_HEIGHT}px`, width: `${CANVAS_WIDTH}px` }}>
           <canvas ref={matRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
         </div>
+        <Button style={{ width: 'fit-content', alignSelf: 'flex-end' }} variant="contained" color="warning" onClick={intensifyUnforgiving}>Intensify The Unforgiving</Button>
       </div>
   )
 

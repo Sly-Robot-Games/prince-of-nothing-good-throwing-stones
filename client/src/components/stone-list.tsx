@@ -25,9 +25,9 @@ export const StoneList = ({ setNewThrow, clearThrow, clearStones }: InputProps) 
       <div className="subtitle paddingVertical">Crew Stones</div>
       {Object.keys(crewStoneAssetMap).map(name => <StoneSelector stoneName={name} clearStone={clearStones} />)}
       <div className="flexSpread paddingVertical marginTop narrow">
-          <Button style={{ width: '125px' }} variant="contained" color="success" onClick={setNewThrow}>Throw</Button>
-          <Button style={{ width: '125px' }} variant="contained" color="success" onClick={clearThrow}>Clear</Button>
-        </div>
+        <Button style={{ width: '125px' }} variant="contained" color="success" onClick={setNewThrow}>Throw</Button>
+        <Button style={{ width: '125px' }} variant="contained" color="success" onClick={clearThrow}>Clear</Button>
+      </div>
     </Paper>
   )
 

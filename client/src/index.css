@@ -69,6 +69,11 @@
   margin-top: 10px;
 }
 
+.marginVertical {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .paddingVertical {
   padding-top: 10px;
   padding-bottom: 10px;
