@@ -3,18 +3,20 @@ import { STONE_ASSET_NAMES, fullStoneAssetMap } from "../utils/stone-asset-map";
 import LeafMat from '../assets/casting-mat.png';
 import LeafMatBorder from '../assets/casting-mat-cutout.png';
 import { Button } from "@mui/material";
+import { InitializeUnforgiving } from "./initialize-unforgiving";
 
 const ICON_SIZE = 50;
 const CANVAS_HEIGHT = 700;
 const CANVAS_WIDTH = 1000;
 const START_ANGLE = 0;
 const END_ANGLE = Math.PI * 2;
-const UNFORGIVING = {
+export const UNFORGIVING = {
   X: 695,
   Y: 335,
   FILL: 'rgba(180, 39, 9, 0.3)',
   STROKE: 'rgba(180, 39, 9, 0.5)',
   INTENSIFIER: 40,
+  RADIUS: 50,
 };
 
 type InputProps = {
@@ -26,7 +28,8 @@ type InputProps = {
 }
 
 export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThrow, completeClear }: InputProps) => {
-  const [unforgivingRadius, setUnforgivingRadius] = useState<number>(50);
+  const [unforgivingRadius, setUnforgivingRadius] = useState<number>(UNFORGIVING.RADIUS);
+  const [dialogVisible, setDialogVisible] = useState<boolean>(false);
 
   const matRef = useRef<HTMLCanvasElement | null>(null);
   const leafMat = useMemo(() => new Image(), []);
@@ -58,8 +61,8 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
     }
   }, [leafMat]);
 
+  // TODO - intensifying should not clear stones, store all stone locations in state
   const drawUnforgiving = useCallback(() => {
-    console.log('?')
     const context = getContext();
     if (!context) {
       return;
@@ -127,13 +130,43 @@ export const CastingMat = ({ activeStones, throwStones, clearCanvas, completeThr
 
   const intensifyUnforgiving = () => setUnforgivingRadius(unforgivingRadius + UNFORGIVING.INTENSIFIER);
 
+  const toggleInitializerDialog = () => setDialogVisible(!dialogVisible);
+
+  const unforgivingLevel = ((unforgivingRadius - UNFORGIVING.RADIUS) / UNFORGIVING.INTENSIFIER) + 1;
+
   return (
-      <div className="flexColumn">
-        <div className="rounded marginVertical" style={{ height: `${CANVAS_HEIGHT}px`, width: `${CANVAS_WIDTH}px` }}>
-          <canvas ref={matRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
+      <>
+        <div className="flexColumn">
+          <div className="rounded marginVertical" style={{ height: `${CANVAS_HEIGHT}px`, width: `${CANVAS_WIDTH}px` }}>
+            <canvas ref={matRef} height={CANVAS_HEIGHT} width={CANVAS_WIDTH} />
+          </div>
+          <div className="flexSpread fullWidth">
+            <div className="body" style={{ alignSelf: 'flex-start' }}>Unforgiving Level: {unforgivingLevel}</div>
+            <div>
+              <Button
+                variant="outlined"
+                style={{ borderColor: 'whitesmoke', color: 'whitesmoke', marginRight: 10 }}
+                onClick={toggleInitializerDialog}
+                size="small"
+              >
+                Initialize Unforgiving
+              </Button>
+              <Button
+                style={{ width: 'fit-content' }}
+                variant="contained"
+                color="warning"
+                onClick={intensifyUnforgiving}
+                size="small"
+              >
+                  Intensify The Unforgiving
+              </Button>
+            </div>
+          </div>
         </div>
-        <Button style={{ width: 'fit-content', alignSelf: 'flex-end' }} variant="contained" color="warning" onClick={intensifyUnforgiving}>Intensify The Unforgiving</Button>
-      </div>
+        {dialogVisible && (
+          <InitializeUnforgiving setRadius={setUnforgivingRadius} handleClose={toggleInitializerDialog} />
+        )}
+      </>
   )
 
 }
