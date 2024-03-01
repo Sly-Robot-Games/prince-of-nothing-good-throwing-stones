@@ -13,7 +13,6 @@ export default App
 /**
  * Notes to self / To Do:
  * 
- * pass selected stone information to canvas (add state store)
- * fade in animations on stones?
- * 
+ * Make mobile viewing work nicer
+ * Make intensifying unforgiven not clear stones
  */
