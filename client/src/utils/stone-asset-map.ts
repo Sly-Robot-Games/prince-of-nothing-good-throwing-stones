@@ -13,7 +13,6 @@ import CalIcon from '../assets/crew-stone-cal.png';
 import JazzIcon from '../assets/crew-stone-jazz.png';
 import TalinIcon from '../assets/crew-stone-talin.png';
 
-
 type StoneAssetDictionary = Record<string, StoneAsset>
 type StoneAsset = {
   label: string,
@@ -116,7 +115,6 @@ export const crewStoneAssetMap: StoneAssetDictionary = {
     selectable: true,
   }
 } as const;
-
 
 export const fullStoneAssetMap: StoneAssetDictionary = {
   ...basicStoneAssetMap,

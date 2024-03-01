@@ -1,19 +1,22 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, } from "react";
 import { fullStoneAssetMap } from "../../utils/stone-asset-map";
 import Checkbox from "@mui/material/Checkbox";
+import { StoneState, stoneSelector, stoneToggled } from "../../state/stones-state";
+import { useDispatch, useSelector } from "react-redux";
 
 export const StoneSelector = ({ stoneName, clearStone }: { stoneName: string, clearStone?: boolean }) => {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
-
-  const toggleSelected = useCallback(() => setIsSelected(prevSelected => !prevSelected), []);
+  const dispatch = useDispatch();
+  const toggleSelected = useCallback(() => dispatch(stoneToggled(stoneName)), [stoneName, dispatch]);
 
   const stoneDetails = fullStoneAssetMap[stoneName];
+  const stoneState = useSelector(((state: { stones: StoneState }) => stoneSelector(state, stoneName)));
+  const isSelected = Boolean(stoneState?.selected);
 
   useEffect(() => {
     if (clearStone && isSelected) {
-      toggleSelected()
+      toggleSelected();
     }
-  }, [clearStone, isSelected, toggleSelected])
+  }, [clearStone, isSelected, toggleSelected]);
 
   if (!stoneDetails) {
     return null;
