@@ -1,33 +1,26 @@
 import { useState } from "react";
-import { UNFORGIVING } from "./casting-mat";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
-import { TextField } from "@mui/material";
+import { UNFORGIVING } from "../utils/unforgiving";
 
 export const InitializeUnforgiving = ({ setRadius, handleClose }: { setRadius: (r: number) => void; handleClose: () => void; }) => {
-  const [error, setError] = useState<boolean>();
   const [multiplier, setMultiplier] = useState<number>(1);
   
-  const handleMultiplierChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setError(false);
-    const parsedValue = parseInt(e.target.value, 10);
-    if (Number.isNaN(parsedValue)) {
-      setError(true);
+  const handleMultiplierChange = (action: 'add' | 'subtract') => () => {
+    const newMultiplier = action === 'add' ?  multiplier + 1 : multiplier - 1;
+
+    if (newMultiplier > 15 || newMultiplier < 1) {
       return;
     }
 
-    if (parsedValue > 15 || parsedValue < 1) {
-      return;
-    }
-
-    setMultiplier(parsedValue);
+    setMultiplier(newMultiplier);
   }
 
   const handleUpdateUnforgiving = () => {
-    setRadius(UNFORGIVING.RADIUS + (UNFORGIVING.INTENSIFIER * multiplier));
+    setRadius(UNFORGIVING.RADIUS + (UNFORGIVING.INTENSIFIER * (multiplier - 1)));
     handleClose();
   }
 
@@ -45,17 +38,10 @@ export const InitializeUnforgiving = ({ setRadius, handleClose }: { setRadius: (
           If this isn't your first session, you can set the unforgiven level to where you left off. 
           If this is your first session, leave the value at 1 to begin!
         </div>
-        <div className="flexRow">
-          <div className="marginRight body">Unforgiving Level: </div>
-          <TextField
-            variant="standard"
-            value={multiplier}
-            error={error}
-            onChange={handleMultiplierChange}
-            type="number"
-            color="success"
-            style={{ width: 50 }}
-          />
+        <div className="flexRowCenter">
+          <div className={`symbol-large ${multiplier === 1 ? 'disabled' : ''}`} role="presentation" onClick={handleMultiplierChange('subtract')}>-</div>
+          <div className="hero marginX">{multiplier}</div>
+          <div className={`symbol  ${multiplier === 15 ? 'disabled' : ''}`} role="presentation" onClick={handleMultiplierChange('add')}>+</div>
         </div>
       </DialogContent>
       <DialogActions>
